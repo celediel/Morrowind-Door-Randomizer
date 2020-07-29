@@ -8,7 +8,7 @@ I discovered that tes3.setDestination() was a thing, so I wrote this. When
 the game is started up, a list of all cells is built. Whenever an unlocked,
 cell-change door is activated, its destination cell is randomized, according
 to the below configuration values. A list of starting positions is built by
-looking through each door in the chosen cell, and in each of those
+looking through each door in the chosen cell, then in each of those
 destination cells, finding doors that return to the original picked cell, and
 using its destination position/orientation values. The player's position in
 the cell is chosen randomly from that list. If none are found, a default of
@@ -27,6 +27,7 @@ the cell is chosen randomly from that list. If none are found, a default of
     * Both
     * Match destination cell
 * Ignore list for cells
+* Ignore list for doors
 * Debug logging, to see my cool recursive functions at work
 
 ## Requirements ##

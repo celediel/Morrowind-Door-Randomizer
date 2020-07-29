@@ -70,5 +70,12 @@ template:createExclusionsPage({
     }
 })
 
-return template
+template:createExclusionsPage({
+    label = "Ignored doors",
+    description = "These doors will not be randomized.",
+    showAllBlocked = false,
+    variable = createTableVar("ignoredDoors"),
+    filters = {{label = "Doors", type = "Object", objectType = tes3.objectType.door}}
+})
 
+return template

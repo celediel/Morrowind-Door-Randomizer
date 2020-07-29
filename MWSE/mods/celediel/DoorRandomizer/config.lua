@@ -7,6 +7,18 @@ local defaultConfig = {
     needDoor = true,
     debug = false,
     ignoredCells = {},
+    -- some of these aren't cell change doors but whatever
+    ignoredDoors = {
+        ["chargen customs door"] = true,
+        ["chargendoorjournal"] = true,
+        ["chargen door hall"] = true,
+        ["chargen door captain"] = true,
+        ["chargen door exit"] = true,
+        ["chargen_ship_trapdoor"] = true,
+        ["chargen_shipdoor"] = true,
+        ["chargen exit door"] = true,
+        ["chargen_cabindoor"] = true
+    }
 }
 
 local currentConfig

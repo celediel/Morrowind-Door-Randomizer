@@ -32,7 +32,8 @@ local function pickSpot(cell)
     for cellDoor in cell:iterateReferences(tes3.objectType.door) do
         if cellDoor.destination then -- only cell change doors
             -- loop through doors in THAT cell to find the door that led us there in the first place
-            log("Looking through door %s in %s leading to %s", cellDoor.name or cellDoor.id, cell.id, cellDoor.destination.cell.id)
+            log("Looking through door %s in %s leading to %s", cellDoor.name or cellDoor.id,
+                cell.id, cellDoor.destination.cell.id)
             for innerDoor in cellDoor.destination.cell:iterateReferences(tes3.objectType.door) do
                 if innerDoor.destination and innerDoor.destination.cell.id == cell.id then
                     -- found the door, now add where that door puts a player to our table
@@ -109,6 +110,11 @@ local function onActivate(e)
     if e.activator ~= tes3.player and e.target.objectType ~= tes3.objectType.door then return end
 
     local door = e.target
+
+    if config.ignoredDoors[string.lower(door.id)] then
+        log("Ignored door, not randomizing.")
+        return
+    end
 
     -- don't randomize locked doors, or: only randomize when a cell change event happens
     if door.destination and not tes3.getLocked({reference = door}) then
