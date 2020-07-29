@@ -2,7 +2,7 @@ local common = require("celediel.DoorRandomizer.common")
 
 local defaultConfig = {
     randomizeChance = 50,
-    interiorExterior = common.cellTypes.both,
+    interiorExterior = common.cellTypes.match,
     wildernessCells = true,
     needDoor = true,
     debug = false,
