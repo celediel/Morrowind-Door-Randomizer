@@ -65,13 +65,13 @@ local function pickCell(ogDest)
     local picked = table.choice(cells)
     local cell = tes3.getCell({id = picked})
 
-    if not config.wildernessCells and not cell.name then
-        log("%s is wilderness, trying again...", cell.id)
+    if config.ignoredCells[cell.id] then
+        log("%s is ignored cell, trying again...", cell.id)
         cell = pickCell(ogDest)
     end
 
-    if config.ignoredCells[cell.id] then
-        log("%s is ignored cell, trying again...", cell.id)
+    if not config.wildernessCells and not cell.name then
+        log("%s is wilderness, trying again...", cell.id)
         cell = pickCell(ogDest)
     end
 
@@ -148,3 +148,5 @@ end
 
 event.register("initialized", onInitialized)
 event.register("modConfigReady", function() mwse.mcm.register(require("celediel.DoorRandomizer.mcm")) end)
+
+-- vim:fdm=marker
