@@ -81,7 +81,7 @@ local function pickCell(ogDest)
         log("%s is exterior, trying again...", cell.id)
         cell = pickCell(ogDest)
     elseif config.interiorExterior == common.cellTypes.match and not isTypeMatch(ogDest, cell) then
-        log("%s and %s aren't same cell type, trying again...", ogDest.id, cell.id)
+        log("%s and %s are not same cell type, trying again...", ogDest.id, cell.id)
         cell = pickCell(ogDest)
     end
 
