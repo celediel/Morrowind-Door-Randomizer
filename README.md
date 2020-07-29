@@ -4,13 +4,23 @@
 
 A Morrowind MWSE-Lua mod to randomize the destinations of cell-change doors. 
 
-I discovered that tes3.setDestination() was a thing, so I wrote this.
+I discovered that tes3.setDestination() was a thing, so I wrote this. When
+the game is started up, a list of all cells is built. Whenever an unlocked,
+cell-change door is activated, its destination cell is randomized, according
+to the below configuration values. A list of starting positions is built by
+looking through each door in the chosen cell, and in each of those
+destination cells, finding doors that return to the original picked cell, and
+using its destination position/orientation values. The player's position in
+the cell is chosen randomly from that list. If none are found, a default of
+(0,0,0) is used for both values.
 
 ## Mod configuration menu ##
 
 * Percent chance to randomize doors on activate
 * Enable/Disable choosing of Wilderness cells
 * Enable/Disable choosing of cells without a door to place the player at
+    * With this enabled, if no starting positions are found in a cell, a new
+    cell will be chosen.
 * Choose only:
     * Interior cells
     * Exterior cells

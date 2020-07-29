@@ -36,7 +36,7 @@ local function pickSpot(cell)
             for innerDoor in cellDoor.destination.cell:iterateReferences(tes3.objectType.door) do
                 if innerDoor.destination and innerDoor.destination.cell.id == cell.id then
                     -- found the door, now add where that door puts a player to our table
-                    log("Found a door in %s leading to %s with starting position:(%s) and orientation:(%s)",
+                    log("Found a door in %s leading to %s with starting position:%s and orientation:%s",
                         cellDoor.destination.cell.id, innerDoor.destination.cell.id,
                         innerDoor.destination.marker.position, innerDoor.destination.marker.orientation)
                     -- comment this out and set config.needDoor = true to cause infinite recursion
@@ -90,12 +90,12 @@ end
 
 local function pickCellAndSpot(ogDest)
     local cell = pickCell(ogDest)
-    log("finally settled on %s, now picking position/orientation", cell.id)
+    log("Finally settled on %s, now picking position/orientation", cell.id)
 
     local spot = pickSpot(cell)
 
     if config.needDoor and isZero(spot) then
-        log("No good spots in %s, starting over!", cell.id)
+        log("No good door positions in %s, starting over!", cell.id)
         cell, spot = pickCellAndSpot(ogDest)
     end
 
