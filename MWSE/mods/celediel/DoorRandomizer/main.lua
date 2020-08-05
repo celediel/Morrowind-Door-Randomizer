@@ -4,6 +4,9 @@ local config = require("celediel.DoorRandomizer.config").getConfig()
 
 local cells = {}
 
+-- the door's original destination
+local ogDestination
+
 -- {{{ helper functions
 local function log(...) if config.debug then mwse.log("[%s] %s", common.modName, string.format(...)) end end
 
@@ -18,7 +21,7 @@ end
 
 local function isTypeMatch(ogCell, chosenCell)
     return ((ogCell.isInterior and ogCell.behavesAsExterior) or not ogCell.isInterior) ==
-               ((chosenCell.isInterior and chosenCell.behavesAsExterior) or not chosenCell.isInterior)
+           ((chosenCell.isInterior and chosenCell.behavesAsExterior) or not chosenCell.isInterior)
 end
 -- }}}
 
@@ -32,8 +35,8 @@ local function pickSpot(cell)
     for cellDoor in cell:iterateReferences(tes3.objectType.door) do
         if cellDoor.destination then -- only cell change doors
             -- loop through doors in THAT cell to find the door that led us there in the first place
-            log("Looking through door %s in %s leading to %s", cellDoor.name or cellDoor.id,
-                cell.id, cellDoor.destination.cell.id)
+            log("Looking through door %s in %s leading to %s",
+                cellDoor.name or cellDoor.id, cell.id, cellDoor.destination.cell.id)
             for innerDoor in cellDoor.destination.cell:iterateReferences(tes3.objectType.door) do
                 if innerDoor.destination and innerDoor.destination.cell.id == cell.id then
                     -- found the door, now add where that door puts a player to our table
@@ -132,8 +135,34 @@ local function onActivate(e)
 
         log("Picked %s at (%s) facing (%s)", cell.id, spot.position, spot.orientation)
 
+        -- store the original destination so that we can reset it later
+        if not config.keepRandomized and not ogDestination then
+            ogDestination = {
+                door = door,
+                cell = door.destination.cell,
+                position = door.destination.marker.position,
+                orientation = door.destination.marker.orientation
+            }
+        end
+
         -- set the door's destination to the picked cell and position/orientation
         tes3.setDestination({reference = door, cell = cell, position = spot.position, orientation = spot.orientation})
+    end
+end
+
+local function onCellChanged(e)
+    if not config.keepRandomized and ogDestination then
+        log("Resetting door to original destination")
+
+        -- it's later
+        tes3.setDestination({
+            reference = ogDestination.door,
+            cell = ogDestination.cell,
+            position = ogDestination.position,
+            orientation = ogDestination.orientation
+        })
+
+        timer.delayOneFrame(function() ogDestination = nil end)
     end
 end
 
@@ -143,6 +172,7 @@ local function onInitialized(e)
     log("found %s cells", #cells)
 
     event.register("activate", onActivate)
+    event.register("cellChanged", onCellChanged)
 end
 -- }}}
 

@@ -1,9 +1,7 @@
 local common = require("celediel.DoorRandomizer.common")
 local config = require("celediel.DoorRandomizer.config").getConfig()
 
-local function createTableVar(id)
-    return mwse.mcm.createTableVariable({id = id, table = config})
-end
+local function createTableVar(id) return mwse.mcm.createTableVariable({id = id, table = config}) end
 
 local template = mwse.mcm.createTemplate({name = common.modName})
 template:saveOnClose(common.configPath, config)
@@ -15,10 +13,7 @@ local page = template:createSideBarPage({
 
 local category = page:createCategory(common.modName)
 
-category:createYesNoButton({
-    label = "Pick wilderness cells?",
-    variable = createTableVar("wildernessCells")
-})
+category:createYesNoButton({label = "Pick wilderness cells?", variable = createTableVar("wildernessCells")})
 
 category:createYesNoButton({
     label = "Pick only cells that place the player at doors?",
@@ -47,9 +42,15 @@ category:createSlider({
 })
 
 category:createYesNoButton({
-    label = "Debug logging",
-    variable = createTableVar("debug")
+    label = "Keep randomized destination?",
+    description = "Doors keep the randomized destination, or get " ..
+        "reset to their original destination after cell change.\n\n" ..
+        "Warning! This (presumably) permanently alters the door's " ..
+        "destination for that save. Enable at your own peril!",
+    variable = createTableVar("keepRandomized")
 })
+
+category:createYesNoButton({label = "Debug logging", variable = createTableVar("debug")})
 
 template:createExclusionsPage({
     label = "Ignored cells",
@@ -61,9 +62,7 @@ template:createExclusionsPage({
             label = "Cells",
             callback = function()
                 local cells = {}
-                for cell, _ in pairs(tes3.dataHandler.nonDynamicData.cells) do
-                    table.insert(cells, cell)
-                end
+                for cell, _ in pairs(tes3.dataHandler.nonDynamicData.cells) do table.insert(cells, cell) end
                 return cells
             end
         }

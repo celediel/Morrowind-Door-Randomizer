@@ -5,6 +5,7 @@ local defaultConfig = {
     interiorExterior = common.cellTypes.match,
     wildernessCells = true,
     needDoor = true,
+    keepRandomized = false,
     debug = false,
     ignoredCells = {},
     -- some of these aren't cell change doors but whatever
