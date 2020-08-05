@@ -30,6 +30,7 @@ local function pickSpot(cell)
     -- this will be the position/orientation destination of every door that puts the player into the above chosen cell
     local spots = {}
     local spot
+    local default = {position = tes3vector3.new(0, 0, 0), orientation = tes3vector3.new(0, 0, 0)}
 
     -- peek through doors in that cell to pick a position/orientation for the player
     for cellDoor in cell:iterateReferences(tes3.objectType.door) do
@@ -56,16 +57,14 @@ local function pickSpot(cell)
     if #spots > 0 then
         log("There %s %s spot%s in %s", #spots > 1 and "were" or "was", #spots, #spots > 1 and "s" or "", cell.id)
         spot = table.choice(spots)
-    else
-        -- if we don't find any then use 0,0,0, which can be really bad in some cells
-        spot = {position = tes3vector3.new(0, 0, 0), orientation = tes3vector3.new(0, 0, 0)}
     end
 
-    return spot
+    -- if we don't find any then use 0,0,0, which can be really bad in some cells
+    return spot or default
 end
 
 local function pickCell(ogDest)
-    local picked = table.choice(cells)
+    local _, picked = table.choice(cells)
     local cell = tes3.getCell({id = picked})
 
     if config.ignoredCells[cell.id] then
@@ -167,9 +166,11 @@ local function onCellChanged(e)
 end
 
 local function onInitialized(e)
-    for cell, _ in pairs(tes3.dataHandler.nonDynamicData.cells) do table.insert(cells, cell) end
+    for cell, _ in pairs(tes3.dataHandler.nonDynamicData.cells) do cells[cell] = true end
 
-    log("found %s cells", #cells)
+    local i = 0
+    for _ in pairs(cells) do i = i + 1 end
+    log("found %s %s unique cell names", i)
 
     event.register("activate", onActivate)
     event.register("cellChanged", onCellChanged)
