@@ -170,7 +170,7 @@ local function onInitialized(e)
 
     local i = 0
     for _ in pairs(cells) do i = i + 1 end
-    log("found %s %s unique cell names", i)
+    log("found %s unique cell names", i)
 
     event.register("activate", onActivate)
     event.register("cellChanged", onCellChanged)
