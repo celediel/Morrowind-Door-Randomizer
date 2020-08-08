@@ -23,6 +23,35 @@ local function isTypeMatch(ogCell, chosenCell)
     return ((ogCell.isInterior and ogCell.behavesAsExterior) or not ogCell.isInterior) ==
            ((chosenCell.isInterior and chosenCell.behavesAsExterior) or not chosenCell.isInterior)
 end
+
+local function doorCheck(door)
+    -- only randomize doors
+    if door.object.objectType ~= tes3.objectType.door then
+        return false
+    end
+
+    -- that trigger cell changes
+    if not door.destination then
+        return false
+    end
+
+    -- that aren't locked
+    if tes3.getLocked({reference = door}) then
+        return false
+    end
+
+    if config.ignoredDoors[string.lower(door.id)] then
+        log("Ignored door, not randomizing.")
+        return false
+    end
+
+    if config.ignoreScripted and door.object.script then
+        log("Scripted door, not randomizing.")
+        return false
+    end
+
+    return true
+end
 -- }}}
 
 -- {{{ cell and position/orientation picking
@@ -106,46 +135,42 @@ local function pickCellAndSpot(ogDest)
 end
 -- }}}
 
--- {{{ event functions
-local function onActivate(e)
-    -- only do stuff on cell change doors
-    if e.activator ~= tes3.player and e.target.objectType ~= tes3.objectType.door then return end
+-- {{{ the functions that do the thing
+local function randomizeDoor(door)
+    log("Picking initial cell...")
+    local cell, spot = pickCellAndSpot(door.destination.cell)
 
-    local door = e.target
+    log("Picked %s at (%s) facing (%s)", cell.id, spot.position, spot.orientation)
 
-    if config.ignoredDoors[string.lower(door.id)] then
-        log("Ignored door, not randomizing.")
-        return
+    -- store the original destination so that we can reset it later
+    if not config.keepRandomized and not ogDestination then
+        ogDestination = {
+            door = door,
+            cell = door.destination.cell,
+            position = door.destination.marker.position,
+            orientation = door.destination.marker.orientation
+        }
     end
 
-    -- don't randomize locked doors, or: only randomize when a cell change event happens
-    if door.destination and not tes3.getLocked({reference = door}) then
-        local roll = math.random(0, 100)
-        local rollStr = "Randomize Roll: %s "
-        if config.randomizeChance < roll then
-            log(rollStr .. "> %s, not randomizing", roll, config.randomizeChance)
-            return
+    -- set the door's destination to the picked cell and position/orientation
+    tes3.setDestination({reference = door, cell = cell, position = spot.position, orientation = spot.orientation})
+end
+-- }}}
+
+-- {{{ event functions
+local function onActivate(e)
+    local door = e.target
+    -- only randomize good doors that the player activates
+    if e.activator == tes3.player and doorCheck(door) then
+        local roll = math.random(1, 100)
+        local randomize = config.randomizeChance > roll
+
+        log("Randomize Roll: %s %s %s, %srandomizing!", roll,
+            randomize and "<" or ">", config.randomizeChance, randomize and "" or "not ")
+
+        if randomize then
+            randomizeDoor(door)
         end
-
-        log(rollStr .. "< %s, randomizing!", roll, config.randomizeChance)
-
-        log("Picking initial cell...")
-        local cell, spot = pickCellAndSpot(door.destination.cell)
-
-        log("Picked %s at (%s) facing (%s)", cell.id, spot.position, spot.orientation)
-
-        -- store the original destination so that we can reset it later
-        if not config.keepRandomized and not ogDestination then
-            ogDestination = {
-                door = door,
-                cell = door.destination.cell,
-                position = door.destination.marker.position,
-                orientation = door.destination.marker.orientation
-            }
-        end
-
-        -- set the door's destination to the picked cell and position/orientation
-        tes3.setDestination({reference = door, cell = cell, position = spot.position, orientation = spot.orientation})
     end
 end
 

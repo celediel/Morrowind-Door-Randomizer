@@ -6,6 +6,7 @@ local defaultConfig = {
     wildernessCells = true,
     needDoor = true,
     keepRandomized = false,
+    ignoreScripted = true,
     debug = false,
     ignoredCells = {},
     -- some of these aren't cell change doors but whatever

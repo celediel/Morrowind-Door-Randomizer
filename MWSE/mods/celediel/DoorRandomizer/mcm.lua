@@ -50,6 +50,8 @@ category:createYesNoButton({
     variable = createTableVar("keepRandomized")
 })
 
+category:createYesNoButton({label = "Ignore scripted doors?", variable = createTableVar("ignoreScripted")})
+
 category:createYesNoButton({label = "Debug logging", variable = createTableVar("debug")})
 
 template:createExclusionsPage({
