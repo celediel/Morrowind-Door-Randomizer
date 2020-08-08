@@ -10,7 +10,10 @@ this.randomizeDoor = function(door, chance)
         return
     end
 
-    chance = chance or 0
+    if not chance then
+        common.log("[Interop] No randomize chance given, defaulting to 100%")
+        chance = 100
+    end
 
     if not door.data.doorRandomizer then door.data.doorRandomizer = {} end
 
