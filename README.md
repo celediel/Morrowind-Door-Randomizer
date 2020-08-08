@@ -30,6 +30,24 @@ the cell is chosen randomly from that list. If none are found, a default of
 * Ignore list for doors
 * Debug logging, to see my cool recursive functions at work
 
+## Interop Module ##
+
+For modders, an interop module is included. Use it like so:
+
+```Lua
+
+local interop = require("celediel.DoorRandomizer.interop") -- the module
+
+local chance = interop.getRandomizeChance() -- get global randomize chance
+interop.setRandomizeChance(chance + 25) -- set global randomize chance
+
+-- https://mwse.readthedocs.io/en/latest/lua/type/tes3door.html
+local door -- a tes3door references
+
+interop.randomizeDoor(door, 100) -- overrides randomize chance for this one door
+interop.unRandomizeDoor(door) -- removes overrides
+```
+
 ## Requirements ##
 MWSE 2.1 nightly @ [github](https://github.com/MWSE/MWSE)
 

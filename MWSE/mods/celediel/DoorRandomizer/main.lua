@@ -163,10 +163,14 @@ local function onActivate(e)
     -- only randomize good doors that the player activates
     if e.activator == tes3.player and doorCheck(door) then
         local roll = math.random(1, 100)
-        local randomize = config.randomizeChance > roll
+
+        -- door overrides from interop
+        local chance = door.data.doorRandomizer and door.data.doorRandomizer.randomizeChance or config.randomizeChance
+
+        local randomize = chance > roll
 
         log("Randomize Roll: %s %s %s, %srandomizing!", roll,
-            randomize and "<" or ">", config.randomizeChance, randomize and "" or "not ")
+            randomize and "<" or ">", chance, randomize and "" or "not ")
 
         if randomize then
             randomizeDoor(door)
