@@ -12,4 +12,6 @@ this.cellTypes = {
     match = 3
 }
 
+this.log = function(...) mwse.log("[%s] %s", this.modName, string.format(...)) end
+
 return this

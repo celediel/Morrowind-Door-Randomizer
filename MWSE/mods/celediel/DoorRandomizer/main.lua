@@ -8,7 +8,7 @@ local cells = {}
 local ogDestination
 
 -- {{{ helper functions
-local function log(...) if config.debug then mwse.log("[%s] %s", common.modName, string.format(...)) end end
+local function log(...) if config.debug then common.log(...) end end
 
 local function isZero(spot)
     return spot.position.x == 0 and
