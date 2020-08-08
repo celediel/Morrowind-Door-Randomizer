@@ -36,16 +36,16 @@ For modders, an interop module is included. Use it like so:
 
 ```Lua
 
-local interop = require("celediel.DoorRandomizer.interop") -- the module
+local doorRandomizer = require("celediel.DoorRandomizer.interop") -- the module
 
-local chance = interop.getRandomizeChance() -- get global randomize chance
-interop.setRandomizeChance(chance + 25) -- set global randomize chance
+local chance = doorRandomizer.getRandomizeChance() -- get global randomize chance
+doorRandomizer.setRandomizeChance(chance + 25) -- set global randomize chance
 
 -- https://mwse.readthedocs.io/en/latest/lua/type/tes3door.html
 local door -- a tes3door references
 
-interop.randomizeDoor(door, 100) -- overrides randomize chance for this one door
-interop.unRandomizeDoor(door) -- removes overrides
+doorRandomizer.randomizeDoor(door, 100) -- overrides randomize chance for this one door
+doorRandomizer.unRandomizeDoor(door) -- removes overrides
 ```
 
 ## Requirements ##
