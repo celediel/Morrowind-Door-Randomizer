@@ -42,7 +42,7 @@ local chance = doorRandomizer.getRandomizeChance() -- get global randomize chanc
 doorRandomizer.setRandomizeChance(chance + 25) -- set global randomize chance
 
 -- https://mwse.readthedocs.io/en/latest/lua/type/tes3door.html
-local door -- a tes3door references
+local door -- a tes3door reference
 
 doorRandomizer.randomizeDoor(door, 100) -- overrides randomize chance for this one door
 doorRandomizer.unRandomizeDoor(door) -- removes overrides
