@@ -195,7 +195,7 @@ local function onCellChanged(e)
 end
 
 local function onInitialized(e)
-    for cell, _ in pairs(tes3.dataHandler.nonDynamicData.cells) do cells[cell] = true end
+    for _, cell in pairs(tes3.dataHandler.nonDynamicData.cells) do cells[cell.id] = true end
 
     local i = 0
     for _ in pairs(cells) do i = i + 1 end
